@@ -1,8 +1,6 @@
-# Road-Safety-Alert-System
-------------------------------
 # Project Overview
 This AI-Based Road Safety Alert System aims to enhance driver safety by predicting hazardous road conditions in real-time. Using machine learning, the system identifies potential dangers based on factors such as road surface, weather, and traffic controls, issuing timely alerts to drivers to promote safer driving. The project is designed with a modular structure, separating the frontend interface from the backend API, which hosts the trained machine learning model. This setup allows the system to analyze input data quickly and deliver clear, actionable alerts to drivers, making it a practical, adaptable solution for improving road safety in diverse driving environments.
-Tech Stack
+# Tech Stack
 - Programming Language: Python (for model training and backend)
 - Frameworks:
   - Flask: for backend API development
@@ -14,7 +12,7 @@ Tech Stack
   - Joblib: for saving and loading models and preprocessors
   - Pandas: for data processing
   - Flask-CORS: for handling cross-origin requests
-Data Processing and Feature Engineering
+# Data Processing and Feature Engineering
 Data Source
 https://www.kaggle.com/datasets/neonninja/nzta-crash-analysis-system-cas
 Feature Selection
@@ -28,7 +26,7 @@ List selected features such as:
 Data Preprocessing
 - Missing Value Handling: Using mean imputation to handle missing data.
 - Data Balancing: Using SMOTE to oversample minority classes and address data imbalance.
-Model Training and Evaluation
+# Model Training and Evaluation
 Model Selection
 Use a RandomForestClassifier, and briefly justify this choice, e.g., effectiveness in binary classification tasks.
 Model Training Steps
@@ -38,7 +36,7 @@ Model Training Steps
 Model Evaluation
 - Evaluate using metrics such as accuracy, precision, recall, and F1 score.
 - Include results (e.g., confusion matrix, classification report) to showcase performance.
-System Design
+# System Design
 System Architecture
 - Frontend: User interface allowing data input and alert display.
 - Backend: Flask API for data processing and prediction, responding to frontend requests.
