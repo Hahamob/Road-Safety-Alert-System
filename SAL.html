@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-time Road Safety Alert System</title>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 容器样式 */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题样式 */
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        /* 按钮样式 */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 警示框样式 */
+        .alert-box {
+            font-size: 1.2em;
+            color: #d9534f;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            display: none; /* 初始隐藏，显示时通过 JavaScript 控制 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Driver Safety Alert System</h2>
+
+        <div class="form-group">
+            <label for="roadCurvature">Road Curvature:</label>
+            <select id="roadCurvature">
+                <option value="Straight">Straight</option>
+                <option value="Curved">Curved</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="roadSurface">Road Surface:</label>
+            <select id="roadSurface">
+                <option value="Sealed">Sealed</option>
+                <option value="Unsealed">Unsealed</option>
+                <option value="Wet">Wet</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="weatherA">Primary Weather Condition:</label>
+            <select id="weatherA">
+                <option value="Fine">Fine</option>
+                <option value="Light rain">Light rain</option>
+                <option value="Heavy rain">Heavy rain</option>
+                <option value="Mist or Fog">Mist or Fog</option>
+                <option value="Snow">Snow</option>
+                <option value="Hail or Sleet">Hail or Sleet</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="weatherB">Secondary Weather Condition:</label>
+            <select id="weatherB">
+                <option value="None">None</option>
+                <option value="Frost">Frost</option>
+                <option value="Strong wind">Strong wind</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="speedLimit">Speed Limit (km/h):</label>
+            <input type="number" id="speedLimit" value="50" min="5" max="110" step="5">
+        </div>
+
+        <div class="form-group">
+            <label for="roadCharacter">Road Character:</label>
+            <select id="roadCharacter">
+                <option value="Bridge">Bridge</option>
+                <option value="Motorway ramp">Motorway ramp</option>
+                <option value="Overpass">Overpass</option>
+                <option value="Rail crossing">Rail crossing</option>
+                <option value="Speed hump">Speed hump</option>
+                <option value="Tunnel">Tunnel</option>
+                <option value="Underpass">Underpass</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="trafficControl">Traffic Control:</label>
+            <select id="trafficControl">
+                <option value="None">None</option>
+                <option value="Give way">Give way</option>
+                <option value="Stop">Stop</option>
+                <option value="Traffic Signals">Traffic Signals</option>
+                <option value="School Patrol">School Patrol</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+        </div>
+
+        <button onclick="fetchAlert()">Get Safety Alert</button>
+
+        <div id="alertBox" class="alert-box">Waiting for alert...</div>
+    </div>
+
+    <script>
+    async function fetchAlert() {
+        const data = {
+            roadCurvature: document.getElementById('roadCurvature').value,
+            roadSurface: document.getElementById('roadSurface').value,
+            weatherA: document.getElementById('weatherA').value,
+            weatherB: document.getElementById('weatherB').value,
+            speedLimit: parseInt(document.getElementById('speedLimit').value),
+            roadCharacter: document.getElementById('roadCharacter').value,
+            trafficControl: document.getElementById('trafficControl').value
+        };
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerText = `${result.alert}`;
+            alertBox.style.display = 'block';
+        } catch (error) {
+            console.error("Error fetching alert:", error);
+            alert("Error fetching alert. Please try again.");
+        }
+    }
+    </script>
+
+</body>
+</html>
